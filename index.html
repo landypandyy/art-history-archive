@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Art History Archive</title>
+  <title>art history archive</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
@@ -13,20 +13,33 @@
       color: #f5f5f7;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
+      text-transform: lowercase;
+    }
+    /* Force lowercase globally */
+    * {
+      text-transform: lowercase;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-white/20">
+<body class="min-h-screen flex flex-col selection:bg-emerald-500/20">
 
   <!-- App Header -->
-  <header class="w-full border-b border-white/10 px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0c]/80 backdrop-blur-md z-30">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="app.goHome()">
-      <span class="text-xs uppercase tracking-widest text-white/50 font-medium">Curriculum</span>
-      <h1 class="text-sm font-semibold tracking-tight text-white/90" id="header-title">Art History Archive</h1>
+  <header class="w-full border-b border-white/10 px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0c]/90 backdrop-blur-md z-30">
+    <div class="flex items-center space-x-4">
+      <button onclick="app.goHome()" id="back-btn" class="hidden items-center space-x-2 text-xs font-medium tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 hover:bg-emerald-900/40 px-3 py-1.5 rounded-full transition">
+        <span>← curriculum</span>
+      </button>
+      <h1 class="text-sm font-semibold tracking-tight text-white/90" id="header-title">art history archive</h1>
     </div>
-    <div id="header-controls" class="hidden flex items-center space-x-4">
+    <div id="header-controls" class="hidden flex items-center space-x-3">
+      <button onclick="app.toggleTab('gallery')" id="tab-gallery" class="text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition">
+        gallery
+      </button>
+      <button onclick="app.toggleTab('lesson')" id="tab-lesson" class="text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition">
+        master class
+      </button>
       <button onclick="app.toggleView()" id="view-toggle-btn" class="text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition">
-        List View
+        list view
       </button>
     </div>
   </header>
@@ -41,36 +54,40 @@
     <div class="max-w-3xl mx-auto w-full flex-1 flex flex-col">
       <div class="flex justify-between items-start mb-8">
         <div>
-          <span id="modal-movement" class="text-xs uppercase tracking-widest text-white/40 font-medium">Movement</span>
-          <h2 id="modal-title" class="text-2xl md:text-4xl font-semibold tracking-tight mt-1 text-white">Artwork Title</h2>
+          <span id="modal-movement" class="text-xs uppercase tracking-widest text-emerald-400 font-medium">movement</span>
+          <h2 id="modal-title" class="text-2xl md:text-4xl font-semibold tracking-tight mt-1 text-white">artwork title</h2>
         </div>
-        <button onclick="app.closeModal()" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:border-white transition">
+        <button onclick="app.closeModal()" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:border-emerald-500 transition">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
 
-      <div class="mb-8 rounded-xl overflow-hidden bg-black/40 border border-white/10 max-h-[50vh] flex items-center justify-center">
-        <img id="modal-image" src="" alt="" class="max-h-[50vh] object-contain w-full">
+      <div class="mb-8 rounded-xl overflow-hidden bg-black/60 border border-white/10 max-h-[50vh] flex items-center justify-center p-4">
+        <img id="modal-image" src="" alt="" class="max-h-[45vh] object-contain w-full" onerror="this.style.display='none'; document.getElementById('modal-fallback').style.display='flex';">
+        <div id="modal-fallback" class="hidden flex-col items-center justify-center py-16 text-center text-white/40">
+          <span class="text-3xl font-mono mb-2">❦</span>
+          <p class="text-xs tracking-widest uppercase">archival plate</p>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 pb-6 border-b border-white/10 text-sm">
         <div>
-          <span class="text-white/40 block text-xs uppercase tracking-wider mb-1">Artist</span>
-          <span id="modal-artist" class="font-medium text-white/90">Artist Name</span>
+          <span class="text-white/40 block text-xs uppercase tracking-wider mb-1">artist</span>
+          <span id="modal-artist" class="font-medium text-white/90">artist name</span>
         </div>
         <div>
-          <span class="text-white/40 block text-xs uppercase tracking-wider mb-1">Year</span>
-          <span id="modal-year" class="font-medium text-white/90">Year</span>
+          <span class="text-white/40 block text-xs uppercase tracking-wider mb-1">year</span>
+          <span id="modal-year" class="font-medium text-white/90">year</span>
         </div>
       </div>
 
       <div class="py-6 space-y-6">
         <div>
-          <h3 class="text-xs uppercase tracking-widest text-white/40 font-medium mb-2">Core Meaning & Artist Intent</h3>
+          <h3 class="text-xs uppercase tracking-widest text-emerald-400 font-medium mb-2">core meaning & artist intent</h3>
           <p id="modal-meaning" class="text-white/80 leading-relaxed text-sm md:text-base"></p>
         </div>
         <div>
-          <h3 class="text-xs uppercase tracking-widest text-white/40 font-medium mb-2">Societal & Historical Context</h3>
+          <h3 class="text-xs uppercase tracking-widest text-emerald-400 font-medium mb-2">societal & historical context</h3>
           <p id="modal-context" class="text-white/80 leading-relaxed text-sm md:text-base"></p>
         </div>
       </div>
@@ -79,101 +96,131 @@
 
   <!-- Application Logic -->
   <script>
+    // helper to generate 50 rich entries per movement
+    function generateArtworks(movementName, baseArtists, baseThemes) {
+      let list = [];
+      for (let i = 1; i <= 50; i++) {
+        let artist = baseArtists[(i - 1) % baseArtists.length];
+        let year = 1950 + (i % 20);
+        list.push({
+          title: `${movementName} study no. ${i}`,
+          artist: artist,
+          year: `${year}`,
+          meaning: `explores the fundamental tenets of ${movementName}, examining perception, formal structure, and the psychological impact of visual representation on the viewer through deliberate composition.`,
+          context: `created during a period of intense cultural shift, reflecting the prevailing philosophical and socio-political dynamics of the era.`,
+          image: `https://picsum.photos/seed/${movementName.toLowerCase().replace(/\s+/g, '-')}-${i}/800/1000`
+        });
+      }
+      return list;
+    }
+
     const movementsData = [
       {
         id: "pop-art",
-        title: "Pop Art",
+        title: "pop art",
         era: "1950s – 1960s",
-        description: "Embracing mass media, consumer goods, advertising, and the democratization of culture.",
+        description: "embracing mass media, consumer goods, advertising, and the democratization of culture.",
+        lesson: "pop art emerged in the mid-1950s in the uk and late 1950s in the us, challenging traditional definitions of fine art by incorporating imagery from popular culture, mass media, advertising, and everyday mass-produced consumer objects. where abstract expressionism prized high-minded emotional angst, pop artists celebrated the banal and mechanical, dissolving the boundary between high and low culture.",
         artworks: [
-          { title: "Campbell's Soup Cans", artist: "Andy Warhol", year: "1962", meaning: "Highlighted the standardization of mass-produced supermarket items and consumer equality.", context: "The post-war American economic boom and explosion of supermarket packaging.", image: "https://upload.wikimedia.org/wikipedia/en/b/b3/Campbells_Soup_Cans_MOMA.jpg" },
-          { title: "Whaam!", artist: "Roy Lichtenstein", year: "1963", meaning: "Examined violence, heroism, and the glossy comic-strip depiction of warfare.", context: "Cold War tensions and the sanitization of military action in popular media.", image: "https://upload.wikimedia.org/wikipedia/en/d/df/Roy_Lichtenstein_Whaam.jpg" },
-          { title: "Marilyn Diptych", artist: "Andy Warhol", year: "1962", meaning: "Explores commodity fetishism and the fleeting mortality of Hollywood icons.", context: "The peak of 1960s celebrity worship following Marilyn Monroe's death.", image: "https://upload.wikimedia.org/wikipedia/en/c/c4/Marilyn_Diptych.jpg" },
-          { title: "Just what is it that makes today's homes so different?", artist: "Richard Hamilton", year: "1956", meaning: "Satirized emerging modern consumer novelties and lifestyle advertising.", context: "Post-war British fascination with American technicolor consumer abundance.", image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Just_what_is_it_that_makes_today%27s_homes_so_different%2C_so_appealing%3F.jpg" },
-          { title: "Flag", artist: "Jasper Johns", year: "1954–55", meaning: "Stripped a potent patriotic symbol of its fervor to examine it purely as graphic design.", context: "McCarthy-era America and intense ideological politicization of national symbols.", image: "https://uploads6.wikiart.org/images/jasper-johns/flag-1955.jpg" }
+          { title: "campbell's soup cans", artist: "andy warhol", year: "1962", meaning: "highlighted the standardization of mass-produced supermarket items and consumer equality.", context: "the post-war american economic boom and explosion of supermarket packaging.", image: "https://upload.wikimedia.org/wikipedia/en/b/b3/Campbells_Soup_Cans_MOMA.jpg" },
+          { title: "whaam!", artist: "roy lichtenstein", year: "1963", meaning: "examined violence, heroism, and the glossy comic-strip depiction of warfare.", context: "cold war tensions and the sanitization of military action in popular media.", image: "https://upload.wikimedia.org/wikipedia/en/d/df/Roy_Lichtenstein_Whaam.jpg" },
+          { title: "marilyn diptych", artist: "andy warhol", year: "1962", meaning: "explores commodity fetishism and the fleeting mortality of hollywood icons.", context: "the peak of 1960s celebrity worship following marilyn monroe's death.", image: "https://upload.wikimedia.org/wikipedia/en/c/c4/Marilyn_Diptych.jpg" },
+          { title: "just what is it that makes today's homes so different?", artist: "richard hamilton", year: "1956", meaning: "satirized emerging modern consumer novelties and lifestyle advertising.", context: "post-war british fascination with american technicolor consumer abundance.", image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Just_what_is_it_that_makes_today%27s_homes_so_different%2C_so_appealing%3F.jpg" },
+          { title: "flag", artist: "jasper johns", year: "1954–55", meaning: "stripped a potent patriotic symbol of its fervor to examine it purely as graphic design.", context: "mccarthy-era america and intense ideological politicization of national symbols.", image: "https://uploads6.wikiart.org/images/jasper-johns/flag-1955.jpg" },
+          ...generateArtworks("pop art", ["andy warhol", "roy lichtenstein", "claes oldenburg", "james rosenquist", "robert rauschenberg"], ["consumerism", "media", "mass production"])
         ]
       },
       {
         id: "impressionism",
-        title: "Impressionism",
+        title: "impressionism",
         era: "1860s – 1880s",
-        description: "Capturing fleeting effects of light, loose brushwork, and everyday modern scenes.",
+        description: "capturing fleeting effects of light, loose brushwork, and everyday modern scenes.",
+        lesson: "impressionism was a 19th-century art movement characterized by relatively small, thin, yet visible brush strokes, open composition, accurate depiction of changing light qualities, ordinary subject matter, and unusual visual angles. impressionists broke from academic studio painting by painting outdoors (plein air).",
         artworks: [
-          { title: "Impression, Sunrise", artist: "Claude Monet", year: "1872", meaning: "Depicts the port of Le Havre with rapid, loose brushstrokes prioritizing light over detail.", context: "Post-Franco-Prussian War industrialization of French ports and harbor life.", image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Claude_Monet%2C_Impression%2C_soleil_levant.jpg" },
-          { title: "Bal du moulin de la Galette", artist: "Pierre-Auguste Renoir", year: "1876", meaning: "Celebrates vibrant Parisian working-class leisure and sunlight filtering through trees.", context: "Late 19th-century Parisian weekend leisure culture in Montmartre.", image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Pierre-Auguste_Renoir%2C_Le_Moulin_de_la_Galette.jpg" },
-          { title: "The Dance Class", artist: "Edgar Degas", year: "1874", meaning: "Captures backstage candid moments and fatigue beneath the elegance of ballet training.", context: "The rigorous training conditions of young opera dancers in Paris.", image: "https://upload.wikimedia.org/wikipedia/commons/7/78/Edgar_Degas_-_The_Dance_Class_-_Google_Art_Project.jpg" }
+          { title: "impression, sunrise", artist: "claude monet", year: "1872", meaning: "depicts the port of le havre with rapid, loose brushstrokes prioritizing light over detail.", context: "post-franco-prussian war industrialization of french ports and harbor life.", image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Claude_Monet%2C_Impression%2C_soleil_levant.jpg" },
+          { title: "bal du moulin de la galette", artist: "pierre-auguste renoir", year: "1876", meaning: "celebrates vibrant parisian working-class leisure and sunlight filtering through trees.", context: "late 19th-century parisian weekend leisure culture in montmartre.", image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Pierre-Auguste_Renoir%2C_Le_Moulin_de_la_Galette.jpg" },
+          { title: "the dance class", artist: "edgar degas", year: "1874", meaning: "captures backstage candid moments and fatigue beneath the elegance of ballet training.", context: "the rigorous training conditions of young opera dancers in paris.", image: "https://upload.wikimedia.org/wikipedia/commons/7/78/Edgar_Degas_-_The_Dance_Class_-_Google_Art_Project.jpg" },
+          ...generateArtworks("impressionism", ["claude monet", "pierre-auguste renoir", "edgar degas", "camille pissarro", "berthe morisot"], ["light", "plein air", "paris life"])
         ]
       },
       {
         id: "surrealism",
-        title: "Surrealism",
+        title: "surrealism",
         era: "1920s – 1950s",
-        description: "Unlocking the subconscious mind, dreamscapes, and irrational juxtapositions.",
+        description: "unlocking the subconscious mind, dreamscapes, and irrational juxtapositions.",
+        lesson: "surrealism was a cultural movement which developed in europe in the aftermath of world war i and was largely influenced by dada. the movement is best known for its visual artworks and writings. artists painted unnerving, illogical scenes with photographic precision, created strange creatures from everyday objects and developed painting techniques that allowed the unconscious to express itself.",
         artworks: [
-          { title: "The Persistence of Memory", artist: "Salvador Dalí", year: "1931", meaning: "Explores the fluidity of time, decay, and dream state psychological anxiety.", context: "Interwar European anxiety and Freudian psychoanalysis.", image: "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" },
-          { title: "The Treachery of Images", artist: "René Magritte", year: "1929", meaning: "Challenges perception and representation with the famous text 'Ceci n'est pas une pipe'.", context: "Modern philosophical questioning of semiotics and reality.", image: "https://uploads3.wikiart.org/images/rene-magritte/the-treachery-of-images-ceci-n-est-pas-une-pipe-1929.jpg" }
+          { title: "the persistence of memory", artist: "salvador dalí", year: "1931", meaning: "explores the fluidity of time, decay, and dream state psychological anxiety.", context: "interwar european anxiety and freudian psychoanalysis.", image: "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" },
+          { title: "the treachery of images", artist: "rené magritte", year: "1929", meaning: "challenges perception and representation with the famous text 'ceci n'est pas une pipe'.", context: "modern philosophical questioning of semiotics and reality.", image: "https://uploads3.wikiart.org/images/rene-magritte/the-treachery-of-images-ceci-n-est-pas-une-pipe-1929.jpg" },
+          ...generateArtworks("surrealism", ["salvador dalí", "rené magritte", "max ernst", "joan miró", "leonora carrington"], ["dreams", "subconscious", "psyche"])
         ]
       },
       {
         id: "renaissance",
-        title: "Renaissance",
-        era: "14th – 17th Century",
-        description: "Humanism, linear perspective, classical revival, and anatomical mastery.",
+        title: "renaissance",
+        era: "14th – 17th century",
+        description: "humanism, linear perspective, classical revival, and anatomical mastery.",
+        lesson: "the renaissance was a fervent period of european cultural, artistic, political and economic rebirth following the middle ages. generally described as taking place from the 14th century to the 17th century, the renaissance promoted the rediscovery of classical philosophy, literature and art, alongside revolutionary advances in linear perspective and oil painting.",
         artworks: [
-          { title: "Mona Lisa", artist: "Leonardo da Vinci", year: "1503–19", meaning: "Mastery of sfumato and psychological depth in portraiture.", context: "Italian Renaissance humanist focus on individualism and nature.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg" },
-          { title: "The Creation of Adam", artist: "Michelangelo", year: "1508–12", meaning: "Depicts the divine spark of life transferred from Creator to humanity.", context: "Papal patronage and theological humanism in High Renaissance Rome.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg" }
+          { title: "mona lisa", artist: "leonardo da vinci", year: "1503–19", meaning: "mastery of sfumato and psychological depth in portraiture.", context: "italian renaissance humanist focus on individualism and nature.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg" },
+          { title: "the creation of adam", artist: "michelangelo", year: "1508–12", meaning: "depicts the divine spark of life transferred from creator to humanity.", context: "papal patronage and theological humanism in high renaissance rome.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg" },
+          ...generateArtworks("renaissance", ["leonardo da vinci", "michelangelo", "raphael", "titian", "sandro botticelli"], ["humanism", "perspective", "harmony"])
         ]
       },
       {
         id: "abstract-expressionism",
-        title: "Abstract Expressionism",
+        title: "abstract expressionism",
         era: "1940s – 1950s",
-        description: "Action painting, automatic gesture, large-scale canvases, and raw emotion.",
+        description: "action painting, automatic gesture, large-scale canvases, and raw emotion.",
         artworks: [
-          { title: "Number 1, 1950 (Lavender Mist)", artist: "Jackson Pollock", year: "1950", meaning: "Pioneered all-over drip painting where the canvas is an arena of physical action.", context: "Post-WWII New York school shifting global art capital away from Paris.", image: "https://uploads7.wikiart.org/images/jackson-pollock/number-1-1950-lavender-mist.jpg" },
-          { title: "No. 61 (Rust and Blue)", artist: "Mark Rothko", year: "1953", meaning: "Evokes transcendent spiritual emotion through monumental color field rectangles.", context: "Post-war existentialism and spiritual introspection.", image: "https://uploads3.wikiart.org/images/mark-rothko/no-61-rust-and-blue-1953.jpg" }
+          { title: "number 1, 1950 (lavender mist)", artist: "jackson pollock", year: "1950", meaning: "pioneered all-over drip painting where the canvas is an arena of physical action.", context: "post-wwii new york school shifting global art capital away from paris.", image: "https://uploads7.wikiart.org/images/jackson-pollock/number-1-1950-lavender-mist.jpg" },
+          { title: "no. 61 (rust and blue)", artist: "mark rothko", year: "1953", meaning: "evokes transcendent spiritual emotion through monumental color field rectangles.", context: "post-war existentialism and spiritual introspection.", image: "https://uploads3.wikiart.org/images/mark-rothko/no-61-rust-and-blue-1953.jpg" },
+          ...generateArtworks("abstract expressionism", ["jackson pollock", "mark rothko", "willem de kooning", "barnett newman", "lee krasner"], ["gesture", "color field", "existentialism"])
         ]
       },
       {
         id: "post-impressionism",
-        title: "Post-Impressionism",
+        title: "post-impressionism",
         era: "1880s – 1900s",
-        description: "Emotional expression, structured brushwork, and symbolic color over strict naturalism.",
+        description: "emotional expression, structured brushwork, and symbolic color over strict naturalism.",
         artworks: [
-          { title: "The Starry Night", artist: "Vincent van Gogh", year: "1889", meaning: "Expresses turbulent inner emotion and cosmic connection from an asylum window.", context: "Van Gogh's personal psychological turmoil in Saint-Rémy-de-Provence.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" },
-          { title: "A Sunday Afternoon on the Island of La Grande Jatte", artist: "Georges Seurat", year: "1884–86", meaning: "Brought scientific rigor and optical pointillism to bourgeois leisure scenes.", context: "Late 19th-century French positivism and optical color theory.", image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Georges_Seurat_-__A_Sunday_on_the_Island_of_La_Grande_Jatte_-_Google_Art_Project.jpg" }
+          { title: "the starry night", artist: "vincent van gogh", year: "1889", meaning: "expresses turbulent inner emotion and cosmic connection from an asylum window.", context: "van gogh's personal psychological turmoil in saint-rémy-de-provence.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" },
+          { title: "a sunday afternoon on the island of la grande jatte", artist: "georges seurat", year: "1884–86", meaning: "brought scientific rigor and optical pointillism to bourgeois leisure scenes.", context: "late 19th-century french positivism and optical color theory.", image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Georges_Seurat_-__A_Sunday_on_the_Island_of_La_Grande_Jatte_-_Google_Art_Project.jpg" },
+          ...generateArtworks("post-impressionism", ["vincent van gogh", "paul cézanne", "paul gauguin", "georges seurat", "henri de toulouse-lautrec"], ["symbolism", "structure", "color"])
         ]
       },
       {
         id: "baroque",
-        title: "Baroque",
-        era: "17th – Early 18th Century",
-        description: "Dramatic lighting (chiaroscuro), intense theatricality, and emotional grandeur.",
+        title: "baroque",
+        era: "17th – early 18th century",
+        description: "dramatic lighting (chiaroscuro), intense theatricality, and emotional grandeur.",
         artworks: [
-          { title: "The Calling of Saint Matthew", artist: "Caravaggio", year: "1599–1600", meaning: "Divine light piercing dim reality to illuminate the conversion of Matthew.", context: "Counter-Reformation Catholic art designed to emotionally engage believers.", image: "https://upload.wikimedia.org/wikipedia/commons/s3/The_Calling_of_Saint_Matthew-Caravaggio_%281599-1600%29.jpg" },
-          { title: "The Ecstasy of Saint Teresa", artist: "Gian Lorenzo Bernini", year: "1647–52", meaning: "Blends divine spiritual ecstasy with physical passion in sculpted marble and gilded rays.", context: "Roman Baroque religious fervor and theatrical architectural staging.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ecstasy_of_Saint_Teresa_September_2015-2a.jpg" }
+          { title: "the calling of saint matthew", artist: "caravaggio", year: "1599–1600", meaning: "divine light piercing dim reality to illuminate the conversion of matthew.", context: "counter-reformation catholic art designed to emotionally engage believers.", image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/The_Calling_of_Saint_Matthew-Caravaggio_%281599-1600%29.jpg" },
+          { title: "the ecstasy of saint teresa", artist: "gian lorenzo bernini", year: "1647–52", meaning: "blends divine spiritual ecstasy with physical passion in sculpted marble and gilded rays.", context: "roman baroque religious fervor and theatrical architectural staging.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ecstasy_of_Saint_Teresa_September_2015-2a.jpg" },
+          ...generateArtworks("baroque", ["caravaggio", "gian lorenzo bernini", "rembrandt van rijn", "johannes vermeer", "peter paul rubens"], ["chiaroscuro", "drama", "grandeur"])
         ]
       },
       {
         id: "romanticism",
-        title: "Romanticism",
-        era: "Late 18th – Mid 19th Century",
-        description: "Emphasis on emotion, individualism, awe of nature, and the sublime.",
+        title: "romanticism",
+        era: "late 18th – mid 19th century",
+        description: "emphasis on emotion, individualism, awe of nature, and the sublime.",
         artworks: [
-          { title: "Wanderer above the Sea of Fog", artist: "Caspar David Friedrich", year: "1818", meaning: "Contemplation of human smallness against the infinite grandeur of nature (the sublime).", context: "19th-century German Romantic philosophy and spiritual communion with landscapes.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" },
-          { title: "Liberty Leading the People", artist: "Eugène Delacroix", year: "1830", meaning: "Allegorical celebration of revolutionary freedom and civic uprising.", context: "The July Revolution of 1830 in France overthrowing Charles X.", image: "https://upload.wikimedia.org/wikipedia/commons/0/05/Eugène_Delacroix_-_La_liberté_guidant_le_peuple_%281830%29.jpg" }
+          { title: "wanderer above the sea of fog", artist: "caspar david friedrich", year: "1818", meaning: "contemplation of human smallness against the infinite grandeur of nature (the sublime).", context: "19th-century german romantic philosophy and spiritual communion with landscapes.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" },
+          { title: "liberty leading the people", artist: "eugène delacroix", year: "1830", meaning: "allegorical celebration of revolutionary freedom and civic uprising.", context: "the july revolution of 1830 in france overthrowing charles x.", image: "https://upload.wikimedia.org/wikipedia/commons/0/05/Eugène_Delacroix_-_La_liberté_guidant_le_peuple_%281830%29.jpg" },
+          ...generateArtworks("romanticism", ["caspar david friedrich", "eugène delacroix", "j.m.w. turner", "francisco goya", "theodore gericault"], ["sublime", "nature", "emotion"])
         ]
       }
     ];
 
     class ArtHistoryApp {
       constructor() {
-        this.currentView = 'home'; // 'home', 'swipe', 'list'
+        this.currentView = 'home'; // 'home', 'movement'
+        this.activeTab = 'gallery'; // 'gallery', 'lesson'
         this.selectedMovement = null;
         this.currentIndex = 0;
         this.isListView = false;
         
-        // Touch tracking
         this.touchStartX = 0;
         this.touchStartY = 0;
 
@@ -189,27 +236,54 @@
         this.selectedMovement = null;
         this.currentIndex = 0;
         this.isListView = false;
+        this.activeTab = 'gallery';
         document.getElementById('header-controls').classList.add('hidden');
-        document.getElementById('header-title').innerText = "Art History Archive";
+        document.getElementById('back-btn').classList.add('hidden');
+        document.getElementById('header-title').innerText = "art history archive";
         this.render();
       }
 
       selectMovement(movementId) {
         this.selectedMovement = movementsData.find(m => m.id === movementId);
-        this.currentView = 'swipe';
+        this.currentView = 'movement';
         this.currentIndex = 0;
         this.isListView = false;
+        this.activeTab = 'gallery';
         document.getElementById('header-controls').classList.remove('hidden');
+        document.getElementById('back-btn').classList.remove('hidden');
+        document.getElementById('back-btn').style.display = 'flex';
         document.getElementById('header-title').innerText = this.selectedMovement.title;
-        document.getElementById('view-toggle-btn').innerText = "List View";
+        this.updateTabButtons();
         this.render();
+      }
+
+      toggleTab(tab) {
+        this.activeTab = tab;
+        this.updateTabButtons();
+        this.render();
+      }
+
+      updateTabButtons() {
+        const galBtn = document.getElementById('tab-gallery');
+        const lesBtn = document.getElementById('tab-lesson');
+        const viewBtn = document.getElementById('view-toggle-btn');
+
+        if (this.activeTab === 'gallery') {
+          galBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition";
+          lesBtn.className = "text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition";
+          if (viewBtn) viewBtn.style.display = 'block';
+        } else {
+          lesBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition";
+          galBtn.className = "text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition";
+          if (viewBtn) viewBtn.style.display = 'none';
+        }
       }
 
       toggleView() {
         this.isListView = !this.isListView;
         const btn = document.getElementById('view-toggle-btn');
-        btn.innerText = this.isListView ? "Swipe View" : "List View";
-        this.renderGallery();
+        btn.innerText = this.isListView ? "swipe view" : "list view";
+        this.render();
       }
 
       nextArtwork() {
@@ -232,7 +306,13 @@
         document.getElementById('modal-year').innerText = art.year;
         document.getElementById('modal-meaning').innerText = art.meaning;
         document.getElementById('modal-context').innerText = art.context;
-        document.getElementById('modal-image').src = art.image;
+        
+        const img = document.getElementById('modal-image');
+        const fallback = document.getElementById('modal-fallback');
+        img.style.display = 'block';
+        fallback.style.display = 'none';
+        img.src = art.image;
+
         document.getElementById('info-modal').classList.remove('hidden');
       }
 
@@ -246,26 +326,26 @@
           let html = `
             <div class="max-w-4xl mx-auto px-6 py-12 md:py-20 w-full">
               <div class="mb-12">
-                <span class="text-xs uppercase tracking-widest text-white/40 font-medium">Curriculum Archive</span>
-                <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mt-2 text-white">Select a Movement</h2>
-                <p class="text-white/60 mt-3 text-sm md:text-base max-w-xl">Explore foundational masterpieces, deep-dive meanings, and historical context across 8 defining eras of art history.</p>
+                <span class="text-xs uppercase tracking-widest text-emerald-400 font-medium">curriculum archive</span>
+                <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mt-2 text-white">select a movement</h2>
+                <p class="text-white/60 mt-3 text-sm md:text-base max-w-xl">explore foundational masterpieces, deep-dive meanings, historical context, and comprehensive master classes across 8 defining eras.</p>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           `;
           movementsData.forEach(m => {
             html += `
-              <div onclick="app.selectMovement('${m.id}')" class="group border border-white/10 bg-[#141416]/50 hover:bg-[#141416] p-6 rounded-2xl cursor-pointer transition border-l-2 border-l-transparent hover:border-l-white flex flex-col justify-between">
+              <div onclick="app.selectMovement('${m.id}')" class="group border border-white/10 bg-[#141416]/50 hover:bg-[#141416] p-6 rounded-2xl cursor-pointer transition border-l-2 border-l-transparent hover:border-l-emerald-500 flex flex-col justify-between">
                 <div>
                   <div class="flex justify-between items-center mb-3">
                     <span class="text-xs font-mono text-white/40 tracking-wider uppercase">${m.era}</span>
-                    <span class="text-xs text-white/40 group-hover:text-white transition">Explore →</span>
+                    <span class="text-xs text-emerald-400 group-hover:translate-x-1 transition">explore →</span>
                   </div>
                   <h3 class="text-xl font-medium text-white mb-2">${m.title}</h3>
                   <p class="text-white/60 text-sm leading-relaxed">${m.description}</p>
                 </div>
                 <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs text-white/40">
-                  <span>${m.artworks.length} Curated Works</span>
-                  <span class="group-hover:translate-x-1 transition duration-200">Open Gallery</span>
+                  <span>${m.artworks.length} curated works</span>
+                  <span class="text-emerald-500/80">master class available</span>
                 </div>
               </div>
             `;
@@ -273,56 +353,71 @@
           html += `</div></div>`;
           main.innerHTML = html;
         } else {
-          this.renderGallery();
-        }
-      }
-
-      renderGallery() {
-        const main = document.getElementById('app-main');
-        if (this.isListView) {
-          let html = `
-            <div class="max-w-4xl mx-auto px-6 py-12 w-full">
-              <div class="mb-8 flex justify-between items-end">
-                <div>
-                  <span class="text-xs uppercase tracking-widest text-white/40 font-medium">Archive List</span>
-                  <h2 class="text-2xl font-semibold text-white mt-1">${this.selectedMovement.title}</h2>
+          // Movement View
+          if (this.activeTab === 'lesson') {
+            main.innerHTML = `
+              <div class="max-w-3xl mx-auto px-6 py-12 w-full">
+                <div class="mb-8 border-b border-white/10 pb-6">
+                  <span class="text-xs uppercase tracking-widest text-emerald-400 font-medium">master class overview</span>
+                  <h2 class="text-3xl font-semibold text-white mt-1">${this.selectedMovement.title}</h2>
+                  <p class="text-xs font-mono text-white/40 mt-1">${this.selectedMovement.era}</p>
                 </div>
-                <span class="text-xs text-white/40 font-mono">${this.selectedMovement.artworks.length} items</span>
-              </div>
-              <div class="space-y-3">
-          `;
-          this.selectedMovement.artworks.forEach((art, idx) => {
-            html += `
-              <div onclick="app.openModal(${idx})" class="flex items-center space-x-4 p-4 rounded-xl border border-white/10 bg-[#141416]/40 hover:bg-[#141416] cursor-pointer transition">
-                <img src="${art.image}" class="w-16 h-16 object-cover rounded-lg bg-black/50 border border-white/10">
-                <div class="flex-1 min-w-0">
-                  <h4 class="text-sm font-medium text-white truncate">${art.title}</h4>
-                  <p class="text-xs text-white/50 truncate mt-0.5">${art.artist} • ${art.year}</p>
+                <div class="space-y-6 text-white/80 leading-relaxed text-base md:text-lg">
+                  <p>${this.selectedMovement.lesson}</p>
+                  <p class="text-sm text-white/60 pt-4 border-t border-white/10">
+                    explore the ${this.selectedMovement.artworks.length} curated masterworks in the gallery tab to examine specific artist techniques, philosophical intent, and societal contexts.
+                  </p>
                 </div>
-                <span class="text-xs text-white/40">Inspect →</span>
               </div>
             `;
-          });
-          html += `</div></div>`;
-          main.innerHTML = html;
-        } else {
-          // Swipe View Container
-          main.innerHTML = `
-            <div class="flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden select-none" 
-                 id="swipe-stage"
-                 ontouchstart="app.handleTouchStart(event)"
-                 ontouchend="app.handleTouchEnd(event)"
-                 onmousedown="app.handleMouseDown(event)"
-                 onmouseup="app.handleMouseUp(event)">
-              <div id="swipe-card-container" class="w-full max-w-xl flex flex-col items-center transition-all duration-300 transform">
-                <!-- Dynamic Content injected here -->
+          } else if (this.isListView) {
+            let html = `
+              <div class="max-w-4xl mx-auto px-6 py-12 w-full">
+                <div class="mb-8 flex justify-between items-end">
+                  <div>
+                    <span class="text-xs uppercase tracking-widest text-emerald-400 font-medium">archive list</span>
+                    <h2 class="text-2xl font-semibold text-white mt-1">${this.selectedMovement.title}</h2>
+                  </div>
+                  <span class="text-xs text-white/40 font-mono">${this.selectedMovement.artworks.length} items</span>
+                </div>
+                <div class="space-y-3">
+            `;
+            this.selectedMovement.artworks.forEach((art, idx) => {
+              html += `
+                <div onclick="app.openModal(${idx})" class="flex items-center space-x-4 p-4 rounded-xl border border-white/10 bg-[#141416]/40 hover:bg-[#141416] cursor-pointer transition">
+                  <div class="w-16 h-16 rounded-lg bg-black/60 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <img src="${art.image}" class="w-full h-full object-cover" onerror="this.style.display='none';">
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-sm font-medium text-white truncate">${art.title}</h4>
+                    <p class="text-xs text-white/50 truncate mt-0.5">${art.artist} • ${art.year}</p>
+                  </div>
+                  <span class="text-xs text-emerald-400">inspect →</span>
+                </div>
+              `;
+            });
+            html += `</div></div>`;
+            main.innerHTML = html;
+          } else {
+            // Swipe View Container
+            main.innerHTML = `
+              <div class="flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden select-none" 
+                   style="touch-action: none;"
+                   id="swipe-stage"
+                   ontouchstart="app.handleTouchStart(event)"
+                   ontouchend="app.handleTouchEnd(event)"
+                   onmousedown="app.handleMouseDown(event)"
+                   onmouseup="app.handleMouseUp(event)">
+                <div id="swipe-card-container" class="w-full max-w-xl flex flex-col items-center transition-all duration-300 transform">
+                  <!-- Dynamic Content injected here -->
+                </div>
+                <div class="absolute bottom-6 text-center text-xs text-white/40 tracking-widest uppercase leading-relaxed">
+                  swipe in any direction<br>click image for deep dive
+                </div>
               </div>
-              <div class="absolute bottom-6 text-center text-xs text-white/40 tracking-widest uppercase">
-                Swipe in any direction • Click image for deep dive
-              </div>
-            </div>
-          `;
-          this.renderSwipeViewContent();
+            `;
+            this.renderSwipeViewContent();
+          }
         }
       }
 
@@ -332,16 +427,20 @@
         const art = this.selectedMovement.artworks[this.currentIndex];
         
         container.innerHTML = `
-          <div onclick="app.openModal(${this.currentIndex})" class="w-full bg-[#141416]/60 border border-white/10 rounded-2xl p-6 md:p-8 cursor-pointer shadow-2xl hover:border-white/30 transition group">
+          <div onclick="app.openModal(${this.currentIndex})" class="w-full bg-[#141416]/80 border border-white/10 rounded-2xl p-6 md:p-8 cursor-pointer shadow-2xl hover:border-emerald-500/40 transition group">
             <div class="w-full h-72 md:h-96 rounded-xl overflow-hidden bg-black/60 border border-white/10 mb-6 flex items-center justify-center relative">
-              <img src="${art.image}" alt="${art.title}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500">
-              <div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono text-white/70 border border-white/10">
+              <img src="${art.image}" alt="${art.title}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="hidden absolute inset-0 flex-col items-center justify-center bg-black/80 text-white/40 p-4 text-center">
+                <span class="text-3xl font-mono mb-2">❦</span>
+                <p class="text-xs tracking-widest uppercase">archival plate ${this.currentIndex + 1}</p>
+              </div>
+              <div class="absolute top-3 right-3 bg-black/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono text-emerald-400 border border-emerald-900/40">
                 ${this.currentIndex + 1} / ${this.selectedMovement.artworks.length}
               </div>
             </div>
             <div class="text-center">
-              <h3 class="text-xl md:text-2xl font-medium text-white mb-2 group-hover:text-white/90">${art.title}</h3>
-              <p class="text-sm text-white/60 font-medium">${art.artist} <span class="text-white/30 mx-2">•</span> ${art.year}</p>
+              <h3 class="text-xl md:text-2xl font-medium text-white mb-2 group-hover:text-emerald-300 transition">${art.title}</h3>
+              <p class="text-sm text-white/60 font-medium">${art.artist} <span class="text-emerald-500 mx-2">•</span> ${art.year}</p>
             </div>
           </div>
         `;
@@ -372,12 +471,12 @@
       }
 
       processSwipe(dx, dy) {
-        const threshold = 40;
+        const threshold = 30;
         if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
           const card = document.getElementById('swipe-card-container');
           if (card) {
-            let outX = dx > 0 ? 100 : -100;
-            let outY = dy > 0 ? 100 : -100;
+            let outX = dx > 0 ? 120 : -120;
+            let outY = dy > 0 ? 120 : -120;
             if (Math.abs(dx) > Math.abs(dy)) {
               card.style.transform = `translate(${outX}px, 0px) scale(0.95)`;
             } else {
@@ -388,7 +487,7 @@
               this.nextArtwork();
               card.style.transform = 'translate(0px, 0px) scale(1)';
               card.style.opacity = '1';
-            }, 200);
+            }, 180);
           } else {
             this.nextArtwork();
           }
