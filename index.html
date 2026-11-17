@@ -15,7 +15,6 @@
       overflow-x: hidden;
       text-transform: lowercase;
     }
-    /* Force lowercase globally */
     * {
       text-transform: lowercase;
     }
@@ -24,15 +23,18 @@
 <body class="min-h-screen flex flex-col selection:bg-emerald-500/20">
 
   <!-- App Header -->
-  <header class="w-full border-b border-white/10 px-6 py-4 flex items-center justify-between sticky top-0 bg-[#0a0a0c]/90 backdrop-blur-md z-30">
-    <div class="flex items-center space-x-4">
-      <button onclick="app.goHome()" id="back-btn" class="hidden items-center space-x-2 text-xs font-medium tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 hover:bg-emerald-900/40 px-3 py-1.5 rounded-full transition">
-        <span>← curriculum</span>
+  <header class="w-full border-b border-white/10 px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between sticky top-gap top-0 bg-[#0a0a0c]/95 backdrop-blur-md z-30 gap-3">
+    <div class="flex items-center space-x-3">
+      <button onclick="app.goHome()" id="back-btn" class="hidden items-center justify-center w-8 h-8 rounded-full text-emerald-400 bg-emerald-950/50 border border-emerald-800/50 hover:bg-emerald-900/40 transition flex-shrink-0">
+        <span>←</span>
       </button>
-      <h1 class="text-sm font-semibold tracking-tight text-white/90" id="header-title">art history archive</h1>
+      <div>
+        <span class="text-[10px] uppercase tracking-widest text-white/40 block font-mono">art history archive</span>
+        <h1 class="text-base md:text-lg font-semibold tracking-tight text-white" id="header-title">curriculum</h1>
+      </div>
     </div>
-    <div id="header-controls" class="hidden flex items-center space-x-3">
-      <button onclick="app.toggleTab('gallery')" id="tab-gallery" class="text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition">
+    <div id="header-controls" class="hidden flex items-center flex-wrap gap-2">
+      <button onclick="app.toggleTab('gallery')" id="tab-gallery" class="text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-800/50 transition">
         gallery
       </button>
       <button onclick="app.toggleTab('lesson')" id="tab-lesson" class="text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition">
@@ -96,38 +98,29 @@
 
   <!-- Application Logic -->
   <script>
-    // helper to generate 50 rich entries per movement
-    function generateArtworks(movementName, baseArtists, baseThemes) {
-      let list = [];
-      for (let i = 1; i <= 50; i++) {
-        let artist = baseArtists[(i - 1) % baseArtists.length];
-        let year = 1950 + (i % 20);
-        list.push({
-          title: `${movementName} study no. ${i}`,
-          artist: artist,
-          year: `${year}`,
-          meaning: `explores the fundamental tenets of ${movementName}, examining perception, formal structure, and the psychological impact of visual representation on the viewer through deliberate composition.`,
-          context: `created during a period of intense cultural shift, reflecting the prevailing philosophical and socio-political dynamics of the era.`,
-          image: `https://picsum.photos/seed/${movementName.toLowerCase().replace(/\s+/g, '-')}-${i}/800/1000`
-        });
-      }
-      return list;
-    }
-
     const movementsData = [
       {
         id: "pop-art",
         title: "pop art",
         era: "1950s – 1960s",
         description: "embracing mass media, consumer goods, advertising, and the democratization of culture.",
-        lesson: "pop art emerged in the mid-1950s in the uk and late 1950s in the us, challenging traditional definitions of fine art by incorporating imagery from popular culture, mass media, advertising, and everyday mass-produced consumer objects. where abstract expressionism prized high-minded emotional angst, pop artists celebrated the banal and mechanical, dissolving the boundary between high and low culture.",
+        lesson: "pop art emerged in the mid-1950s in the uk and late 1950s in the us, representing a seismic shift in the art world. it challenged traditional definitions of 'fine art' by incorporating imagery from popular culture, mass media, advertising, comic books, and everyday mass-produced consumer objects. where abstract expressionism prized high-minded emotional angst, individual brushwork, and spiritual introspection, pop artists celebrated the banal, the mechanical, and the commercial. they dissolved the boundary between high culture and low culture, asserting that a soup can, a comic strip panel, or a neon advertising sign carried as much cultural meaning and visual power as historical painting or classical sculpture.",
         artworks: [
-          { title: "campbell's soup cans", artist: "andy warhol", year: "1962", meaning: "highlighted the standardization of mass-produced supermarket items and consumer equality.", context: "the post-war american economic boom and explosion of supermarket packaging.", image: "https://upload.wikimedia.org/wikipedia/en/b/b3/Campbells_Soup_Cans_MOMA.jpg" },
-          { title: "whaam!", artist: "roy lichtenstein", year: "1963", meaning: "examined violence, heroism, and the glossy comic-strip depiction of warfare.", context: "cold war tensions and the sanitization of military action in popular media.", image: "https://upload.wikimedia.org/wikipedia/en/d/df/Roy_Lichtenstein_Whaam.jpg" },
-          { title: "marilyn diptych", artist: "andy warhol", year: "1962", meaning: "explores commodity fetishism and the fleeting mortality of hollywood icons.", context: "the peak of 1960s celebrity worship following marilyn monroe's death.", image: "https://upload.wikimedia.org/wikipedia/en/c/c4/Marilyn_Diptych.jpg" },
-          { title: "just what is it that makes today's homes so different?", artist: "richard hamilton", year: "1956", meaning: "satirized emerging modern consumer novelties and lifestyle advertising.", context: "post-war british fascination with american technicolor consumer abundance.", image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Just_what_is_it_that_makes_today%27s_homes_so_different%2C_so_appealing%3F.jpg" },
-          { title: "flag", artist: "jasper johns", year: "1954–55", meaning: "stripped a potent patriotic symbol of its fervor to examine it purely as graphic design.", context: "mccarthy-era america and intense ideological politicization of national symbols.", image: "https://uploads6.wikiart.org/images/jasper-johns/flag-1955.jpg" },
-          ...generateArtworks("pop art", ["andy warhol", "roy lichtenstein", "claes oldenburg", "james rosenquist", "robert rauschenberg"], ["consumerism", "media", "mass production"])
+          { title: "campbell's soup cans", artist: "andy warhol", year: "1962", meaning: "thirty-two canvases representing every variety of campbell's soup. warhol highlighted the democratization of consumer goods—stating that whether rich or poor, everyone drinks the exact same soup.", context: "the standardization of mass-produced supermarket items and the rise of mass-market packaging in american grocery stores during the post-war economic boom.", image: "https://upload.wikimedia.org/wikipedia/en/b/b3/Campbells_Soup_Cans_MOMA.jpg" },
+          { title: "whaam!", artist: "roy lichtenstein", year: "1963", meaning: "a massive diptych depicting a fighter jet firing a missile into an enemy plane with a giant explosion. it examines violence, heroism, and the glossy comic-strip depiction of warfare.", context: "cold war tensions, military escalation, and the sanitization of war in mass media and comic books.", image: "https://upload.wikimedia.org/wikipedia/en/d/df/Roy_Lichtenstein_Whaam.jpg" },
+          { title: "marilyn diptych", artist: "andy warhol", year: "1962", meaning: "created shortly after marilyn monroe's death, this silkscreen contrasts brightly colored portraits on one side with fading, ink-bleeding monochrome panels on the other, reflecting commodity fetishism and the fleeting mortality of hollywood icons.", context: "the peak of 1960s celebrity worship and the tragic underbelly of hollywood glamour.", image: "https://upload.wikimedia.org/wikipedia/en/c/c4/Marilyn_Diptych.jpg" },
+          { title: "just what is it that makes today's homes so different, so appealing?", artist: "richard hamilton", year: "1956", meaning: "a seminal collage depicting a modern bachelor pad crammed with consumer novelties. it satirizes the emerging lifestyle of conspicuous consumption.", context: "the dawn of consumer capitalism in post-war britain, exhibiting how advertising began defining human desires.", image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Just_what_is_it_that_makes_today%27s_homes_so_different%2C_so_appealing%3F.jpg" },
+          { title: "flag", artist: "jasper johns", year: "1954–55", meaning: "using encaustic over newspaper collages, johns painted the american flag to depict an object 'the mind already knows,' stripping the symbol of its patriotic fervor to examine it purely as a flat graphic design.", context: "mccarthy-era america, where patriotic symbols were heavily politicized and charged with intense ideological anxiety.", image: "https://uploads6.wikiart.org/images/jasper-johns/flag-1955.jpg" },
+          { title: "drowning girl", artist: "roy lichtenstein", year: "1963", meaning: "features a distressed woman crying in water, speech bubble reading: 'i don't care! i'd rather sink than call brad for help!' it critiques melodrama, gender stereotypes, and romance comic tropes.", context: "gender roles and patriarchal expectations in 1960s mass media.", image: "https://upload.wikimedia.org/wikipedia/en/2/25/Lichtenstein_Drowning_Girl.jpg" },
+          { title: "brillo box", artist: "andy warhol", year: "1964", meaning: "plywood boxes silkscreened to look exactly like supermarket cartons of brillo soap pads. it forced philosophers and art critics to question what distinguishes art from everyday commercial objects.", context: "the rise of supermarkets, brand packaging, and consumer convenience goods in the 1960s.", image: "https://upload.wikimedia.org/wikipedia/en/e/e5/Warhol_Brillo_Box_SFMOMA.jpg" },
+          { title: "love", artist: "robert indiana", year: "1966", meaning: "bold typography stacking the letters l-o-v-e with a tilted 'o'. initially designed as a christmas card, it became an iconic symbol of the 1960s counterculture and peace movement.", context: "the hippie movement, anti-vietnam war sentiment, and the commercialization of graphic design.", image: "https://upload.wikimedia.org/wikipedia/en/7/77/Robert_Indiana%27s_LOVE_sculpture_in_New_York_City.jpg" },
+          { title: "standard station, amarillo, texas", artist: "ed ruscha", year: "1963", meaning: "a sleek, diagonal perspective of a roadside gas station rendered with clean graphic lines, celebrating the stark geometry of america's highway infrastructure.", context: "the expansion of the u.s. interstate highway system and cross-country car culture.", image: "https://uploads2.wikiart.org/images/ed-ruscha/standard-station-amarillo-texas-1963.jpg" },
+          { title: "bed", artist: "robert rauschenberg", year: "1955", meaning: "rauschenberg blurred the line between painting and sculpture by taking a real wooden pillow, quilt, and sheet, smearing them with expressive paint. it challenged abstract expressionism by integrating real, mundane life into high art.", context: "post-war american urban life, asserting that everyday objects hold as much emotional and visual resonance as traditional paint.", image: "https://uploads1.wikiart.org/images/robert-rauschenberg/bed-1955.jpg" },
+          { title: "coke bottle", artist: "andy warhol", year: "1962", meaning: "celebrates the universal democratic nature of mass production where the president and a beggar drink the exact same beverage.", context: "mass production and corporate identity in 1960s american consumerism.", image: "https://uploads5.wikiart.org/images/andy-warhol/green-coca-cola-bottles-1962.jpg" },
+          { title: "f-111", artist: "james rosenquist", year: "1964–65", meaning: "a massive, room-wrapping mural combining a fighter bomber aircraft with domestic appliances to connect the military-industrial complex with domestic consumerism.", context: "the vietnam war and the economic symbiosis between american manufacturing and military defense contracts.", image: "https://uploads3.wikiart.org/images/james-rosenquist/f-111-1965.jpg" },
+          { title: "lipstick (ascending) on caterpillar tracks", artist: "claes oldenburg", year: "1969", meaning: "a monumental inflatable lipstick placed on military tank treads, symbolizing the absurdity of war combined with consumer vanity and student protest.", context: "anti-vietnam war protests on american university campuses.", image: "https://uploads2.wikiart.org/images/claes-oldenburg/lipstick-ascending-on-caterpillar-tracks-1969.jpg" },
+          { title: "soft toilet", artist: "claes oldenburg", year: "1966", meaning: "recreated a rigid, hygienic bathroom fixture in drooping, soft vinyl to subvert the permanence and majesty of traditional monuments.", context: "the playful subversion of everyday domestic objects in pop sculpture.", image: "https://uploads4.wikiart.org/images/claes-oldenburg/soft-toilet-1966.jpg" },
+          { title: "president elect", artist: "james rosenquist", year: "1960–61", meaning: "features a smiling john f. kennedy juxtaposed with a 1950s chevrolet and a slice of cake, critiquing how political candidates were marketed to the public like consumer goods.", context: "the 1960 us presidential election, television political debates, and madison avenue advertising.", image: "https://uploads0.wikiart.org/images/james-rosenquist/president-elect-1961.jpg" }
         ]
       },
       {
@@ -135,12 +128,13 @@
         title: "impressionism",
         era: "1860s – 1880s",
         description: "capturing fleeting effects of light, loose brushwork, and everyday modern scenes.",
-        lesson: "impressionism was a 19th-century art movement characterized by relatively small, thin, yet visible brush strokes, open composition, accurate depiction of changing light qualities, ordinary subject matter, and unusual visual angles. impressionists broke from academic studio painting by painting outdoors (plein air).",
+        lesson: "impressionism was a 19th-century art movement characterized by relatively small, thin, yet visible brush strokes, open composition, accurate depiction of changing light qualities, ordinary subject matter, and unusual visual angles. impressionists broke from academic studio painting by painting outdoors (plein air) to capture optical color phenomena.",
         artworks: [
           { title: "impression, sunrise", artist: "claude monet", year: "1872", meaning: "depicts the port of le havre with rapid, loose brushstrokes prioritizing light over detail.", context: "post-franco-prussian war industrialization of french ports and harbor life.", image: "https://upload.wikimedia.org/wikipedia/commons/5/54/Claude_Monet%2C_Impression%2C_soleil_levant.jpg" },
           { title: "bal du moulin de la galette", artist: "pierre-auguste renoir", year: "1876", meaning: "celebrates vibrant parisian working-class leisure and sunlight filtering through trees.", context: "late 19th-century parisian weekend leisure culture in montmartre.", image: "https://upload.wikimedia.org/wikipedia/commons/2/21/Pierre-Auguste_Renoir%2C_Le_Moulin_de_la_Galette.jpg" },
           { title: "the dance class", artist: "edgar degas", year: "1874", meaning: "captures backstage candid moments and fatigue beneath the elegance of ballet training.", context: "the rigorous training conditions of young opera dancers in paris.", image: "https://upload.wikimedia.org/wikipedia/commons/7/78/Edgar_Degas_-_The_Dance_Class_-_Google_Art_Project.jpg" },
-          ...generateArtworks("impressionism", ["claude monet", "pierre-auguste renoir", "edgar degas", "camille pissarro", "berthe morisot"], ["light", "plein air", "paris life"])
+          { title: "water lilies", artist: "claude monet", year: "1906", meaning: "focuses purely on light reflections, lily pads, and water surfaces in his giverny garden, dissolving distinct boundary lines.", context: "monet's later meditative retreat into his meticulously designed natural sanctuary.", image: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Claude_Monet_-_Nymphéas_%281906%29.jpg" },
+          { title: "the railway station (saint-lazare)", artist: "claude monet", year: "1877", meaning: "celebrates steam, smoke, and modern iron architecture rather than rural landscape.", context: "haussmannization of paris and the expansion of the french railway network.", image: "https://upload.wikimedia.org/wikipedia/commons/6/69/Claude_Monet%2C_Le_Pont_de_l%27Europe%2C_Gare_Saint-Lazare_%281877%29.jpg" }
         ]
       },
       {
@@ -148,11 +142,12 @@
         title: "surrealism",
         era: "1920s – 1950s",
         description: "unlocking the subconscious mind, dreamscapes, and irrational juxtapositions.",
-        lesson: "surrealism was a cultural movement which developed in europe in the aftermath of world war i and was largely influenced by dada. the movement is best known for its visual artworks and writings. artists painted unnerving, illogical scenes with photographic precision, created strange creatures from everyday objects and developed painting techniques that allowed the unconscious to express itself.",
+        lesson: "surrealism was a cultural movement which developed in europe in the aftermath of world war i. artists painted unnerving, illogical scenes with photographic precision, created strange creatures from everyday objects, and developed techniques like automatic drawing that allowed the unconscious mind to express itself.",
         artworks: [
-          { title: "the persistence of memory", artist: "salvador dalí", year: "1931", meaning: "explores the fluidity of time, decay, and dream state psychological anxiety.", context: "interwar european anxiety and freudian psychoanalysis.", image: "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" },
-          { title: "the treachery of images", artist: "rené magritte", year: "1929", meaning: "challenges perception and representation with the famous text 'ceci n'est pas une pipe'.", context: "modern philosophical questioning of semiotics and reality.", image: "https://uploads3.wikiart.org/images/rene-magritte/the-treachery-of-images-ceci-n-est-pas-une-pipe-1929.jpg" },
-          ...generateArtworks("surrealism", ["salvador dalí", "rené magritte", "max ernst", "joan miró", "leonora carrington"], ["dreams", "subconscious", "psyche"])
+          { title: "the persistence of memory", artist: "salvador dalí", year: "1931", meaning: "explores the fluidity of time, decay, and dream state psychological anxiety with melting pocket watches.", context: "interwar european anxiety and freudian psychoanalysis.", image: "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg" },
+          { title: "the treachery of images", artist: "rené magritte", year: "1929", meaning: "challenges perception and representation with the famous text 'ceci n'est pas une pipe' (this is not a pipe).", context: "modern philosophical questioning of semiotics and reality.", image: "https://uploads3.wikiart.org/images/rene-magritte/the-treachery-of-images-ceci-n-est-pas-une-pipe-1929.jpg" },
+          { title: "the son of man", artist: "rené magritte", year: "1964", meaning: "a surreal portrait hiding identity behind a green apple, exploring hidden desires and what is concealed versus revealed.", context: "mid-century psychological anonymity in modern urban bureaucracy.", image: "https://uploads2.wikiart.org/images/rene-magritte/the-son-of-man-1964.jpg" },
+          { title: "the elephant celebes", artist: "max ernst", year: "1921", meaning: "combines mechanical corn-husking apparatus with biomorphic monster forms in a nightmarish dreamscape.", context: "post-wwi trauma and mechanized industrial warfare.", image: "https://uploads8.wikiart.org/images/max-ernst/the-elephant-celebes-1921.jpg" }
         ]
       },
       {
@@ -160,11 +155,12 @@
         title: "renaissance",
         era: "14th – 17th century",
         description: "humanism, linear perspective, classical revival, and anatomical mastery.",
-        lesson: "the renaissance was a fervent period of european cultural, artistic, political and economic rebirth following the middle ages. generally described as taking place from the 14th century to the 17th century, the renaissance promoted the rediscovery of classical philosophy, literature and art, alongside revolutionary advances in linear perspective and oil painting.",
+        lesson: "the renaissance was a fervent period of european cultural, artistic, political and economic rebirth following the middle ages. it promoted the rediscovery of classical philosophy, literature and art, alongside revolutionary advances in linear perspective, human anatomy, and oil painting.",
         artworks: [
           { title: "mona lisa", artist: "leonardo da vinci", year: "1503–19", meaning: "mastery of sfumato and psychological depth in portraiture.", context: "italian renaissance humanist focus on individualism and nature.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg" },
-          { title: "the creation of adam", artist: "michelangelo", year: "1508–12", meaning: "depicts the divine spark of life transferred from creator to humanity.", context: "papal patronage and theological humanism in high renaissance rome.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg" },
-          ...generateArtworks("renaissance", ["leonardo da vinci", "michelangelo", "raphael", "titian", "sandro botticelli"], ["humanism", "perspective", "harmony"])
+          { title: "the creation of adam", artist: "michelangelo", year: "1508–12", meaning: "depicts the divine spark of life transferred from creator to humanity across an electric spatial gap.", context: "papal patronage and theological humanism in high renaissance rome.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Michelangelo_-_Creation_of_Adam_%28cropped%29.jpg" },
+          { title: "the school of athens", artist: "raphael", year: "1509–11", meaning: "celebrates classical philosophy, mathematics, and humanist inquiry within majestic architectural perspective.", context: "the synthesis of classical antiquity and christian theology during the high renaissance.", image: "https://upload.wikimedia.org/wikipedia/commons/4/49/%22The_School_of_Athens%22_by_Raffaello_Sanzio_da_Urbino.jpg" },
+          { title: "the birth of venus", artist: "sandro botticelli", year: "1485", meaning: "depicts the goddess venus emerging from sea foam, fusing classical mythology with neo-platonic philosophy.", context: "medici-patronized florentine renaissance humanism.", image: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg" }
         ]
       },
       {
@@ -172,10 +168,11 @@
         title: "abstract expressionism",
         era: "1940s – 1950s",
         description: "action painting, automatic gesture, large-scale canvases, and raw emotion.",
+        lesson: "abstract expressionism was a post-world war ii art movement in new york city. it was the first american movement to achieve international influence and put new york at the center of the western art world. artists emphasized spontaneous automatic gesture, monumental scale, and existential angst.",
         artworks: [
-          { title: "number 1, 1950 (lavender mist)", artist: "jackson pollock", year: "1950", meaning: "pioneered all-over drip painting where the canvas is an arena of physical action.", context: "post-wwii new york school shifting global art capital away from paris.", image: "https://uploads7.wikiart.org/images/jackson-pollock/number-1-1950-lavender-mist.jpg" },
-          { title: "no. 61 (rust and blue)", artist: "mark rothko", year: "1953", meaning: "evokes transcendent spiritual emotion through monumental color field rectangles.", context: "post-war existentialism and spiritual introspection.", image: "https://uploads3.wikiart.org/images/mark-rothko/no-61-rust-and-blue-1953.jpg" },
-          ...generateArtworks("abstract expressionism", ["jackson pollock", "mark rothko", "willem de kooning", "barnett newman", "lee krasner"], ["gesture", "color field", "existentialism"])
+          { title: "number 1, 1950 (lavender mist)", artist: "jackson pollock", year: "1950", meaning: "pioneered all-over drip painting where the canvas is an arena of physical action and rhythm.", context: "post-wwii new york school shifting global art capital away from paris.", image: "https://uploads7.wikiart.org/images/jackson-pollock/number-1-1950-lavender-mist.jpg" },
+          { title: "no. 61 (rust and blue)", artist: "mark rothko", year: "1953", meaning: "evokes transcendent spiritual emotion through monumental color field rectangles and soft-edged luminescence.", context: "post-war existentialism and spiritual introspection.", image: "https://uploads3.wikiart.org/images/mark-rothko/no-61-rust-and-blue-1953.jpg" },
+          { title: "woman i", artist: "willem de kooning", year: "1950–52", meaning: "fierce, aggressive brushwork depicting a female figure with violent texture and primal energy.", context: "post-war psychological tension and urban anxiety.", image: "https://uploads5.wikiart.org/images/willem-de-kooning/woman-i-1952.jpg" }
         ]
       },
       {
@@ -184,9 +181,9 @@
         era: "1880s – 1900s",
         description: "emotional expression, structured brushwork, and symbolic color over strict naturalism.",
         artworks: [
-          { title: "the starry night", artist: "vincent van gogh", year: "1889", meaning: "expresses turbulent inner emotion and cosmic connection from an asylum window.", context: "van gogh's personal psychological turmoil in saint-rémy-de-provence.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" },
-          { title: "a sunday afternoon on the island of la grande jatte", artist: "georges seurat", year: "1884–86", meaning: "brought scientific rigor and optical pointillism to bourgeois leisure scenes.", context: "late 19th-century french positivism and optical color theory.", image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Georges_Seurat_-__A_Sunday_on_the_Island_of_La_Grande_Jatte_-_Google_Art_Project.jpg" },
-          ...generateArtworks("post-impressionism", ["vincent van gogh", "paul cézanne", "paul gauguin", "georges seurat", "henri de toulouse-lautrec"], ["symbolism", "structure", "color"])
+          { title: "the starry night", artist: "vincent van gogh", year: "1889", meaning: "expresses turbulent inner emotion and cosmic connection from an asylum window through swirling brushstrokes.", context: "van gogh's personal psychological turmoil in saint-rémy-de-provence.", image: "https://upload.wikimedia.org/wikipedia/commons/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg" },
+          { title: "a sunday afternoon on the island of la grande jatte", artist: "georges seurat", year: "1884–86", meaning: "brought scientific rigor and optical pointillism (tiny dots of pure color) to bourgeois leisure scenes.", context: "late 19th-century french positivism and optical color theory.", image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Georges_Seurat_-__A_Sunday_on_the_Island_of_La_Grande_Jatte_-_Google_Art_Project.jpg" },
+          { title: "the card players", artist: "paul cézanne", year: "1892", meaning: "reduces human figures to fundamental geometric cylinders and spheres, laying the groundwork for cubism.", context: "provencal peasant life and structural analysis of form.", image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Paul_Cézanne%2C_1892-93%2C_Les_joueurs_de_cartes_%28The_Card_Players%2C_Paris%29.jpg" }
         ]
       },
       {
@@ -194,10 +191,11 @@
         title: "baroque",
         era: "17th – early 18th century",
         description: "dramatic lighting (chiaroscuro), intense theatricality, and emotional grandeur.",
+        lesson: "the baroque is a style of architecture, music, dance, painting, sculpture, and other arts that flourished in europe from the early 17th century until the 1740s. in art, it used dramatic contrast between light and dark (chiaroscuro) and intense emotional moments to evoke awe and spiritual fervor.",
         artworks: [
-          { title: "the calling of saint matthew", artist: "caravaggio", year: "1599–1600", meaning: "divine light piercing dim reality to illuminate the conversion of matthew.", context: "counter-reformation catholic art designed to emotionally engage believers.", image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/The_Calling_of_Saint_Matthew-Caravaggio_%281599-1600%29.jpg" },
-          { title: "the ecstasy of saint teresa", artist: "gian lorenzo bernini", year: "1647–52", meaning: "blends divine spiritual ecstasy with physical passion in sculpted marble and gilded rays.", context: "roman baroque religious fervor and theatrical architectural staging.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ecstasy_of_Saint_Teresa_September_2015-2a.jpg" },
-          ...generateArtworks("baroque", ["caravaggio", "gian lorenzo bernini", "rembrandt van rijn", "johannes vermeer", "peter paul rubens"], ["chiaroscuro", "drama", "grandeur"])
+          { title: "the calling of saint matthew", artist: "caravaggio", year: "1599–1600", meaning: "divine light piercing dim reality to illuminate the conversion of matthew with theatrical intensity.", context: "counter-reformation catholic art designed to emotionally engage believers.", image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/The_Calling_of_Saint_Matthew-Caravaggio_%281599-1600%29.jpg" },
+          { title: "the ecstasy of saint teresa", artist: "gian lorenzo bernini", year: "1647–52", meaning: "blends divine spiritual ecstasy with physical passion in sculpted marble and gilded architectural rays.", context: "roman baroque religious fervor and theatrical architectural staging.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ecstasy_of_Saint_Teresa_September_2015-2a.jpg" },
+          { title: "girl with a pearl earring", artist: "johannes vermeer", year: "1665", meaning: "captures an intimate, luminous glance and gleaming pearl highlight with exquisite mastery of ambient light.", context: "the dutch golden age of trade, optics, and domestic portraiture.", image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/1665_Girl_with_a_Pearl_Earring.jpg" }
         ]
       },
       {
@@ -205,18 +203,19 @@
         title: "romanticism",
         era: "late 18th – mid 19th century",
         description: "emphasis on emotion, individualism, awe of nature, and the sublime.",
+        lesson: "romanticism was an artistic, literary, and intellectual movement that originated in europe toward the end of the 18th century. it was characterized by its emphasis on emotion and individualism as well as glorification of all the past and nature, preferring the medieval rather than the classical. it focused on the awe-inspiring terror and beauty of the natural sublime.",
         artworks: [
           { title: "wanderer above the sea of fog", artist: "caspar david friedrich", year: "1818", meaning: "contemplation of human smallness against the infinite grandeur of nature (the sublime).", context: "19th-century german romantic philosophy and spiritual communion with landscapes.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" },
-          { title: "liberty leading the people", artist: "eugène delacroix", year: "1830", meaning: "allegorical celebration of revolutionary freedom and civic uprising.", context: "the july revolution of 1830 in france overthrowing charles x.", image: "https://upload.wikimedia.org/wikipedia/commons/0/05/Eugène_Delacroix_-_La_liberté_guidant_le_peuple_%281830%29.jpg" },
-          ...generateArtworks("romanticism", ["caspar david friedrich", "eugène delacroix", "j.m.w. turner", "francisco goya", "theodore gericault"], ["sublime", "nature", "emotion"])
+          { title: "liberty leading the people", artist: "eugène delacroix", year: "1830", meaning: "allegorical celebration of revolutionary freedom and civic uprising leading the citizenry over barricades.", context: "the july revolution of 1830 in france overthrowing charles x.", image: "https://upload.wikimedia.org/wikipedia/commons/0/05/Eugène_Delacroix_-_La_liberté_guidant_le_peuple_%281830%29.jpg" },
+          { title: "the third of may 1808", artist: "francisco goya", year: "1814", meaning: "raw, unromanticized depiction of occupying soldiers executing spanish resisters, highlighting human brutality.", context: "the peninsular war and napoleonic occupation of spain.", image: "https://upload.wikimedia.org/wikipedia/commons/b/b4/El_Tres_de_Mayo%2C_by_Francisco_de_Goya%2C_from_Prado_in_Google_Earth.jpg" }
         ]
       }
     ];
 
     class ArtHistoryApp {
       constructor() {
-        this.currentView = 'home'; // 'home', 'movement'
-        this.activeTab = 'gallery'; // 'gallery', 'lesson'
+        this.currentView = 'home';
+        this.activeTab = 'gallery';
         this.selectedMovement = null;
         this.currentIndex = 0;
         this.isListView = false;
@@ -239,7 +238,7 @@
         this.activeTab = 'gallery';
         document.getElementById('header-controls').classList.add('hidden');
         document.getElementById('back-btn').classList.add('hidden');
-        document.getElementById('header-title').innerText = "art history archive";
+        document.getElementById('header-title').innerText = "curriculum";
         this.render();
       }
 
@@ -269,11 +268,11 @@
         const viewBtn = document.getElementById('view-toggle-btn');
 
         if (this.activeTab === 'gallery') {
-          galBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition";
+          galBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-800/50 transition";
           lesBtn.className = "text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition";
           if (viewBtn) viewBtn.style.display = 'block';
         } else {
-          lesBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-800/50 transition";
+          lesBtn.className = "text-xs tracking-wider uppercase text-emerald-400 px-3 py-1.5 rounded-full bg-emerald-950/50 border border-emerald-800/50 transition";
           galBtn.className = "text-xs tracking-wider uppercase text-white/70 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/30 transition";
           if (viewBtn) viewBtn.style.display = 'none';
         }
@@ -328,7 +327,7 @@
               <div class="mb-12">
                 <span class="text-xs uppercase tracking-widest text-emerald-400 font-medium">curriculum archive</span>
                 <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mt-2 text-white">select a movement</h2>
-                <p class="text-white/60 mt-3 text-sm md:text-base max-w-xl">explore foundational masterpieces, deep-dive meanings, historical context, and comprehensive master classes across 8 defining eras.</p>
+                <p class="text-white/60 mt-3 text-sm md:text-base max-w-xl">explore foundational masterpieces, deep-dive meanings, historical context, and comprehensive master classes across defining eras.</p>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           `;
@@ -353,7 +352,6 @@
           html += `</div></div>`;
           main.innerHTML = html;
         } else {
-          // Movement View
           if (this.activeTab === 'lesson') {
             main.innerHTML = `
               <div class="max-w-3xl mx-auto px-6 py-12 w-full">
@@ -399,7 +397,6 @@
             html += `</div></div>`;
             main.innerHTML = html;
           } else {
-            // Swipe View Container
             main.innerHTML = `
               <div class="flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden select-none" 
                    style="touch-action: none;"
@@ -408,7 +405,7 @@
                    ontouchend="app.handleTouchEnd(event)"
                    onmousedown="app.handleMouseDown(event)"
                    onmouseup="app.handleMouseUp(event)">
-                <div id="swipe-card-container" class="w-full max-w-xl flex flex-col items-center transition-all duration-300 transform">
+                <div id="swipe-card-container" class="w-full max-w-xl flex flex-col items-center transition-transform duration-200 ease-out">
                   <!-- Dynamic Content injected here -->
                 </div>
                 <div class="absolute bottom-6 text-center text-xs text-white/40 tracking-widest uppercase leading-relaxed">
@@ -475,8 +472,8 @@
         if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
           const card = document.getElementById('swipe-card-container');
           if (card) {
-            let outX = dx > 0 ? 120 : -120;
-            let outY = dy > 0 ? 120 : -120;
+            let outX = dx > 0 ? window.innerWidth : -window.innerWidth;
+            let outY = dy > 0 ? window.innerHeight : -window.innerHeight;
             if (Math.abs(dx) > Math.abs(dy)) {
               card.style.transform = `translate(${outX}px, 0px) scale(0.95)`;
             } else {
@@ -484,10 +481,16 @@
             }
             card.style.opacity = '0';
             setTimeout(() => {
-              this.nextArtwork();
-              card.style.transform = 'translate(0px, 0px) scale(1)';
-              card.style.opacity = '1';
-            }, 180);
+              this.currentIndex = (this.currentIndex + 1) % this.selectedMovement.artworks.length;
+              card.style.transition = 'none';
+              card.style.transform = dx > 0 ? `translate(-${window.innerWidth}px, 0px)` : `translate(${window.innerWidth}px, 0px)`;
+              this.renderSwipeViewContent();
+              setTimeout(() => {
+                card.style.transition = 'transform 0.25s ease-out, opacity 0.25s ease-out';
+                card.style.transform = 'translate(0px, 0px) scale(1)';
+                card.style.opacity = '1';
+              }, 20);
+            }, 200);
           } else {
             this.nextArtwork();
           }
